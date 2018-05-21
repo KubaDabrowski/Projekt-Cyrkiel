@@ -1,0 +1,190 @@
+#include <ESP8266WiFi.h>
+ 
+const char* ssid = "Tech_D0055536";//
+const char* password = "GSCMRDBX";
+WiFiServer server(80);                   // Początek inicjalizacji serwera
+
+int dziesiatki = 15;
+int jednosci = 15;
+void reakcja_na_dane_z_serwera(int liczba)       //model, który odpowiada za reakcje programu na dane z serwera
+ {
+  
+      if(dziesiatki == 15)
+      {
+        dziesiatki=liczba;
+     
+      return;
+      }
+      if(dziesiatki != 15)
+      { 
+        model_matematyczny(liczba);    
+        // Gdy wypełnione są wszystki pola pomocnicze dotyczące wyznaczania promienia, rozpoczynamy działanie robocika
+        return;   
+      }  
+  }
+
+void model_matematyczny(int jednosci)
+  {
+    int promien = dziesiatki*10 + jednosci; 
+    int r = promien - 4;     //rozstaw kółek to 8  r - promien zakreslany przez kółko wewnętrzne, R - promien zakreslany przez kółko zewnętrzne
+    int R = promien + 4;
+    float x = ((float)R / (float)r); 
+    float a = x; 
+    int y;
+    int k;
+    for(k=1 ; k<=6 ; k++)               // Pętla w środku obróci się tyle razy, ile wynosi promień, więc żeby silnik krokowy zrobił pełny obrót, cała sekwencja musi się powtórzyć (64/r) razy.  
+    {                                   // Kółko wewnętrzne przebędzie wtedy drogę 12.246 cm (bo promień kółka wynosi 1,95 cm), a żeby przebyło drogę r, musi się to powtórzyć (r/12.246) razy.
+      for(y=1; y<=r; y++)               // Mnożąc (64/r) razy (r/12.246) dostajemy (64/12.246)~= 5.226, ale żeby zostało narysowane pełne koło należy tą liczbę zaokrąglić do góry, przez co otrzymamy liczbę 6. 
+      {
+        //oba_kola();
+              
+        if((int)x-y > 0)         // algorytm który przeplata dodatkowe obroty zewnętrznego koła między obroty obu kół. Równomierne dodawanie dodatkowego obrotu jest bardzo istotne, gdzyż odpowiada 
+        {                        // ono, za dokładność kształtu narysowanego koła. Sposób działania jestnastępujący, znając stosunek dróg, które mają pokonać oba koła musimy ustalić kiedy zewnętrzne koło, które zawsze pokonuje drogę większą niż wewnętrzne
+          x = x - R/r;           // ma wykonywać dodatkowe obroty, po sekwencyjnie wykonywanym wspólnym obrocie. Można to osiągnąć dodając dodatkowy obrót, gdy tylko kolejne wielokrotności stosunku promieni kół będących drogą którą pokonują koła napdzane przez silniczki
+          //zewnetrzne_kolo();     // będą się różniły o ponad 1 od ilości sekwencji, w takim przypadku będzie to oznaczało, że droga którą ma przebyło zewnętrzne koło jest o jeden krok mniejsza niż planowana droga, więc automatycznie dodaje dodatkowy krok, by 
+        }                        // po zakończeniu pętli i odbyciu odpowiedniej ilości sekwencji stosunek przebytych kół był taki, jak na początku planowano, a po podzieleniu sekwencji na małe kawałeczki nie odbiegał zbytnio od niego 
+        x = x + a;
+      }
+    }
+    dziesiatki=15; 
+  }
+void setup() {
+ 
+  Serial.begin(115200);
+  delay(10);
+ 
+  pinMode(14, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
+  pinMode(15, OUTPUT);
+   pinMode(4, OUTPUT);
+  
+  //Miejsce na inicjalizację pozostałych pinów(później ustalimy, które piny)
+
+  digitalWrite(14, LOW);
+  digitalWrite(12, LOW);
+  digitalWrite(13, LOW);
+  digitalWrite(15, LOW);
+  digitalWrite(4,HIGH);
+
+  //Miejsce na ustawienie napięcia wstępnego pozostałych pinów 
+
+
+ 
+  Serial.println();
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+ 
+  WiFi.begin(ssid, password);
+ 
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected");       // Serwer podpięty do sieci
+ 
+ 
+  server.begin();
+  Serial.println("Server started");
+ 
+  
+  Serial.print("Use this URL to connect: ");      // Wypisuje IP serwera w sieci lokalnej
+  Serial.print("http://");
+  Serial.print(WiFi.localIP());
+  Serial.println("/");
+
+ 
+
+  
+}
+ 
+void loop() {
+
+  WiFiClient client = server.available();               // KPoczątek kodu pozwalającego na połączenie użytkownika z serwerem
+  if (!client) { 
+    return;
+  }
+ 
+  
+  Serial.println("new client");                        // Kod dzięki któremu program oczekuje na dane z serwera
+  while(!client.available()){
+    delay(1);
+  }
+ 
+  
+  String request = client.readStringUntil('\r');      // Przyjęcie informacji od serwera
+  Serial.println(request);
+  client.flush();
+ 
+  // Miejsce na 3 funkcje obracające silnikiem (do 1 silnika, do 2 i do obu naprzemiennie)
+
+  // Miejsce na model matematyczny, czyli funkcję void model_matematyczny(setki,dziesiatki,jednosci), która na początku musi mieć zadeklarowaną zmienną x=100*setki+10*dziesiatki+jedności,
+  // a dalsze obliczenia wykonane będą na tej zmiennej.
+
+
+  
+ 
+ 
+
+   if (request.indexOf("/10") != -1)  {                    // Odpowiednia reakcja na odpowiednią informacjię z serwera
+     reakcja_na_dane_z_serwera(0);
+     }
+   if (request.indexOf("/11") != -1)  {
+     reakcja_na_dane_z_serwera(1);
+     }
+   if (request.indexOf("/2") != -1)  {
+     reakcja_na_dane_z_serwera(2);
+     }
+   if (request.indexOf("/3") != -1)  {
+     reakcja_na_dane_z_serwera(3);
+     }
+   if (request.indexOf("/4") != -1)  {
+     reakcja_na_dane_z_serwera(4);
+     }
+   if (request.indexOf("/5") != -1)  {
+     reakcja_na_dane_z_serwera(5);
+     }
+   if (request.indexOf("/6") != -1)  {
+     reakcja_na_dane_z_serwera(6);
+     }
+   if (request.indexOf("/7") != -1)  {
+     reakcja_na_dane_z_serwera(7);
+     }
+   if (request.indexOf("/8") != -1)  {
+     reakcja_na_dane_z_serwera(8);
+     }
+   if (request.indexOf("/9") != -1)  {
+     reakcja_na_dane_z_serwera(9);
+     }
+ 
+  
+  client.println("HTTP/1.1 200 OK");                // Wstęp do deklaracji elementów przekazujących informacje                   
+  client.println("Content-Type: text/html");
+  client.println(""); 
+  client.println("<!DOCTYPE HTML>");
+  client.println("<html>");
+
+ 
+  client.println("<br><br>");
+  client.println("<a href=\"/10\"\"><button>  0  </button></a><br />"); // Deklaracja poszczególnych przycisków
+  client.println("<a href=\"/11\"\"><button>  1  </button></a><br />");
+  client.println("<a href=\"/2\"\"><button>  2  </button></a><br />");
+  client.println("<a href=\"/3\"\"><button>  3  </button></a><br />");
+  client.println("<a href=\"/4\"\"><button>  4  </button></a><br />");
+  client.println("<a href=\"/5\"\"><button>  5  </button></a><br />");  
+  client.println("<a href=\"/6\"\"><button>  6  </button></a><br />");
+  client.println("<a href=\"/7\"\"><button>  7  </button></a><br />");
+  client.println("<a href=\"/8\"\"><button>  8  </button></a><br />");  
+  client.println("<a href=\"/9\"\"><button>  9  </button></a><br />");
+  client.println("<a href=\"/13\"\"><button>  reset  </button></a><br />");
+ 
+  client.println("</html>");
+ 
+  delay(1);
+  Serial.println("Client disonnected");
+  Serial.println("");
+ 
+}
+ 
