@@ -36,12 +36,12 @@ void model_matematyczny(int jednosci)
     {                                   // Kółko wewnętrzne przebędzie wtedy drogę 12.246 cm (bo promień kółka wynosi 1,95 cm), a żeby przebyło drogę r, musi się to powtórzyć (r/12.246) razy.
       for(y=1; y<=r; y++)               // Mnożąc (64/r) razy (r/12.246) dostajemy (64/12.246)~= 5.226, ale żeby zostało narysowane pełne koło należy tą liczbę zaokrąglić do góry, przez co otrzymamy liczbę 6. 
       {
-        //oba_kola();
+        oba_kola();
               
         if((int)x-y > 0)         // algorytm który przeplata dodatkowe obroty zewnętrznego koła między obroty obu kół. Równomierne dodawanie dodatkowego obrotu jest bardzo istotne, gdzyż odpowiada 
         {                        // ono, za dokładność kształtu narysowanego koła. Sposób działania jestnastępujący, znając stosunek dróg, które mają pokonać oba koła musimy ustalić kiedy zewnętrzne koło, które zawsze pokonuje drogę większą niż wewnętrzne
           x = x - R/r;           // ma wykonywać dodatkowe obroty, po sekwencyjnie wykonywanym wspólnym obrocie. Można to osiągnąć dodając dodatkowy obrót, gdy tylko kolejne wielokrotności stosunku promieni kół będących drogą którą pokonują koła napdzane przez silniczki
-          //zewnetrzne_kolo();     // będą się różniły o ponad 1 od ilości sekwencji, w takim przypadku będzie to oznaczało, że droga którą ma przebyło zewnętrzne koło jest o jeden krok mniejsza niż planowana droga, więc automatycznie dodaje dodatkowy krok, by 
+        zewnetrzne_kolo();     // będą się różniły o ponad 1 od ilości sekwencji, w takim przypadku będzie to oznaczało, że droga którą ma przebyło zewnętrzne koło jest o jeden krok mniejsza niż planowana droga, więc automatycznie dodaje dodatkowy krok, by 
         }                        // po zakończeniu pętli i odbyciu odpowiedniej ilości sekwencji stosunek przebytych kół był taki, jak na początku planowano, a po podzieleniu sekwencji na małe kawałeczki nie odbiegał zbytnio od niego 
         x = x + a;
       }
