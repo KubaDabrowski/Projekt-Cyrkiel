@@ -69,9 +69,17 @@ void oba_kola()
    delay(5);
  }
  
-void zewnetrzne_kolo(){
-
-}
+void zewnetrzne_kolo()
+ {
+   digitalWrite(13, LOW); digitalWrite(14, HIGH);
+   delay(5);
+   digitalWrite(15, LOW); digitalWrite(12, HIGH);
+   delay(5);
+   digitalWrite(14, LOW); digitalWrite(13, HIGH);
+   delay(5);
+   digitalWrite(12, LOW); digitalWrite(15, HIGH);
+   delay(5);
+ }
 
 void setup() {
  
