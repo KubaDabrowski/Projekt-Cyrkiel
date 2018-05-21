@@ -48,6 +48,12 @@ void model_matematyczny(int jednosci)
     }
     dziesiatki=15; 
   }
+ 
+void oba_kola(){
+}
+void zewnetrzne_kolo(){
+}
+
 void setup() {
  
   Serial.begin(115200);
@@ -57,7 +63,12 @@ void setup() {
   pinMode(12, OUTPUT);
   pinMode(13, OUTPUT);
   pinMode(15, OUTPUT);
-   pinMode(4, OUTPUT);
+   pinMode(3, OUTPUT);
+  pinMode(16, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(0, OUTPUT);
+   pinMode(2, OUTPUT);
   
   //Miejsce na inicjalizację pozostałych pinów(później ustalimy, które piny)
 
@@ -65,7 +76,13 @@ void setup() {
   digitalWrite(12, LOW);
   digitalWrite(13, LOW);
   digitalWrite(15, LOW);
-  digitalWrite(4,HIGH);
+  digitalWrite(3,HIGH);
+  digitalWrite(16, LOW);
+  digitalWrite(5, LOW);
+  digitalWrite(4, LOW);
+  digitalWrite(0, LOW);
+  digitalWrite(2,HIGH);
+
 
   //Miejsce na ustawienie napięcia wstępnego pozostałych pinów 
 
