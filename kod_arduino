@@ -93,7 +93,7 @@ void setup() {
   pinMode(0, OUTPUT);
    pinMode(2, OUTPUT);
   
-  //Miejsce na inicjalizację pozostałych pinów(później ustalimy, które piny)
+
 
   digitalWrite(14, LOW);
   digitalWrite(12, LOW);
@@ -106,8 +106,6 @@ void setup() {
   digitalWrite(0, LOW);
   digitalWrite(2,HIGH);
 
-
-  //Miejsce na ustawienie napięcia wstępnego pozostałych pinów 
 
 
  
